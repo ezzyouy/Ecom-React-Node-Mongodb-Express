@@ -7,7 +7,7 @@ import { generateToken } from '../utils.js';
 const userRouter = express.Router()
 
 userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
-    console.log(req.body);
+   
 
     const user = await User.findOne({ email: req.body.email });
     if (user == null) console.log("null user");
@@ -16,9 +16,7 @@ userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
     if (user) {
 
         if (bcrypt.compareSync(req.body.password, user.password)) {
-            console.log(
-                "im inside seconde if"
-            );
+            
             res.send({
                 _id: user._id,
                 name: user.name,
