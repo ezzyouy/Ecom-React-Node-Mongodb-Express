@@ -14,7 +14,7 @@ const style = {
     color: 'black'
 }
 const reducer = (state, action) => {
-    switch (action.typr) {
+    switch (action.type) {
         case 'CREATE_REQUEST':
             return { ...state, loading: true }
         case 'CREATE_SUCCESS':
@@ -43,6 +43,8 @@ export default function PlaceOrderScreen() {
     const placeOrderHanler = async () => {
         try {
             dispatch({ type: 'CREATE_REQUEST' });
+            console.log(dispatch({ type: 'CREATE_REQUEST' }));
+            
             const { data } = await axios.post('/api/orders', {
                 orderItems: cart.cartItems,
                 shippingAddress: cart.shippingAddress,
@@ -53,9 +55,11 @@ export default function PlaceOrderScreen() {
                 totalPrice: cart.totalPrice
             }, {
                 headers: {
-                    authorization: `Bearer ${userInfo.token}`
+                    authorization: `bearer ${userInfo.token}`
                 }
             })
+            console.log(data);
+            
             ctxDispatch({ type: 'CREATE_CLEAR' });
             dispatch({ type: 'CREATE_SUCCESS' });
             localStorage.removeItem('cartItems');
@@ -164,7 +168,7 @@ export default function PlaceOrderScreen() {
                                             disabled={cart.cartItems.length === 0}
                                         >Place Order</Button>
                                     </div>
-                                    {console.log(loading)}
+                                    {loading && <LoadingBox></LoadingBox>}
                                 </ListGroup.Item>
                             </ListGroup>
                         </Card.Body>
