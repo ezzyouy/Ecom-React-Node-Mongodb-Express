@@ -44,20 +44,24 @@ export default function OrderScreen() {
         loading: true,
         error: '',
         order: {},
-        successPay:false,
-        loadingPay:false
+        successPay: false,
+        loadingPay: false
 
     })
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer()
+   
+    //#################PayPal############################
+
     function createOrder(data, actions) {
-        return actions.order
-            .create({
-                purchase_units: [
-                    {
-                        amounts: { value: order.totalPrice }
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: order.totalPrice
                     }
-                ]
-            })
+                }
+            ]
+        })
             .then((orderID) => {
                 return orderID;
             })
@@ -82,6 +86,7 @@ export default function OrderScreen() {
     function onError(error) {
         toast.error(getError(error));
     }
+    //#################PayPal############################
     useEffect(() => {
 
         const fetchOrder = async () => {
@@ -108,8 +113,8 @@ export default function OrderScreen() {
             (order._id && order._id !== orderId)
         ) {
             fetchOrder()
-            if(successPay){
-                dispatch({ type: 'PAY_RESET',})
+            if (successPay) {
+                dispatch({ type: 'PAY_RESET', })
             }
         } else {
             const loadPaypalScript = async () => {
@@ -122,7 +127,7 @@ export default function OrderScreen() {
                     type: 'resetOptions',
                     value: {
                         'clientId': clientId,
-                        currency: 'Dhs'
+                        currency: 'USD'
                     }
                 });
                 paypalDispatch({
@@ -135,8 +140,6 @@ export default function OrderScreen() {
 
     }, [order, orderId, userInfo, navigate, paypalDispatch, successPay])
 
-
-console.log(order);
 
     return (
         <>
@@ -248,18 +251,22 @@ console.log(order);
                                         {!order.isPaid && (
                                             <ListGroup.Item>
                                                 {isPending ? (
-                                                    <LoadingBox />
-                                                ) : (<div>
-                                                    <PayPalButtons
-                                                        createOrder={createOrder}
-                                                        onApprove={onApprove}
-                                                        onError={onError}
-                                                    ></PayPalButtons>
-                                                </div>
-                                            )}
-                                            {
-                                                loadingPay && <LoadingBox></LoadingBox>
-                                            }
+                                                    <>
+                                                        <LoadingBox />
+                                                    </>
+                                                ) : (
+                                                    <div>
+                                                        <PayPalButtons
+                                                            createOrder={createOrder}
+                                                            onApprove={onApprove}
+                                                            onError={onError}
+                                                        ></PayPalButtons>
+                                                    </div>
+
+                                                )}
+                                                {
+                                                    loadingPay && <LoadingBox></LoadingBox>
+                                                }
                                             </ListGroup.Item>
                                         )}
                                     </ListGroup>
