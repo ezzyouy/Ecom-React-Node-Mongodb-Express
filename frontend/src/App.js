@@ -16,6 +16,7 @@ import SignupScreen from "./screens/SignupScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
+import OrderHistoryScreen from "./screens/OrderHistoryScreen";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store)
@@ -26,20 +27,22 @@ function App() {
     localStorage.removeItem('shippingAddress')
     localStorage.removeItem('paymentMethod')
   }
-  
+
 
   return (
     <BrowserRouter>
       <div className="d-flex flex-column site-container">
         <ToastContainer position="bottom-center" limit={1} />
         <header>
-          <Navbar bg="dark" variant="dark">
+          <Navbar bg="dark" variant="dark" expand="lg">
             <Container>
               <Nav.Link as={Link} to="/">
                 <Navbar.Brand>Portfolio</Navbar.Brand>
               </Nav.Link >
-              <Nav className="me-auto">
-                <Link to="/cart" className="nav-link">
+              <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+              <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto w-100 justify-content-end">
+                <Link as={Link} to="/cart" className="nav-link">
                   Cart
                   {cart.cartItems.length > 0 && (
                     <Badge pill bg="danger">
@@ -49,16 +52,12 @@ function App() {
                 </Link>
                 {userInfo ?
                   (<NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                    <Nav.Link to={"/profile"}>
-                      <NavDropdown.Item>User Profile</NavDropdown.Item>
-                    </Nav.Link>
-                    <Nav.Link to={"/orderhistory"}>
-                      <NavDropdown.Item>Order History</NavDropdown.Item>
-                    </Nav.Link>
+                    <NavDropdown.Item href="/profile" >User Profile</NavDropdown.Item>
+                    <NavDropdown.Item href="/orderhistory">Order History</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <Link
                       className="dropdown-item"
-                      to="#signout"
+                      to="signout"
                       onClick={signoutHandler}
                     >
                       Sign Out
@@ -68,6 +67,7 @@ function App() {
                     <Link className="nav-link" to="/signin">Sign In</Link>
                   )}
               </Nav>
+              </Navbar.Collapse>
             </Container>
           </Navbar>
         </header>
@@ -82,7 +82,8 @@ function App() {
               <Route path="/payment" element={<PaymentScreen />} />
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
               <Route path="/" element={<HomeScreen />} />
-              <Route path="/order/:id" element={<OrderScreen/>} />
+              <Route path="/order/:id" element={<OrderScreen />} />
+              <Route path="/orderhistory" element={<OrderHistoryScreen />} />
             </Routes>
           </Container>
         </main>
