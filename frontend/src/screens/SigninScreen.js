@@ -35,7 +35,7 @@ export default function SigninScreen() {
         }
     }
     useEffect(() => {
-        if (userInfo) {
+        if (userInfo && userInfo.length != 0) {
           navigate(redirect);
         }
       }, [navigate, redirect, userInfo])
