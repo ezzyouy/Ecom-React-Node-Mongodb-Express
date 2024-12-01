@@ -20,7 +20,8 @@ import OrderHistoryScreen from "./screens/OrderHistoryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import { getError } from "./utils";
 import axios from "axios";
-import SearchBox from "./cmponents/SearchBox";
+import SearchBox from "./components/SearchBox";
+import SearchScreen from "./screens/SearchScreen";
 
 
 function App() {
@@ -81,8 +82,8 @@ function App() {
                       </Badge>
                     )}
                   </Link>
-                  {console.log("userInfo------>", userInfo ? "true" : "false")}
-                  {(userInfo && userInfo.length != 0) ?
+                  
+                  {(userInfo && userInfo.length !== 0) ?
                     (<NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                       <NavDropdown.Item href="/profile" >User Profile</NavDropdown.Item>
                       <NavDropdown.Item href="/orderhistory">Order History</NavDropdown.Item>
@@ -137,7 +138,9 @@ function App() {
               <Route path="/order/:id" element={<OrderScreen />} />
               <Route path="/orderhistory" element={<OrderHistoryScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
+              <Route path="/search" element={<SearchScreen />} />
             </Routes>
+
           </Container>
         </main>
         <footer>

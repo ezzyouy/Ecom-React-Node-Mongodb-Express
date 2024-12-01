@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap'
 import { Helmet } from 'react-helmet-async'
 import { Store } from '../Store'
 import { useNavigate } from 'react-router-dom'
-import CheckoutSteps from '../cmponents/CheckoutSteps'
+import CheckoutSteps from '../components/CheckoutSteps'
 
 export default function ShippingAdreessScreen() {
     const navigate = useNavigate();
