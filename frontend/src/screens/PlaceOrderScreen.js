@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer } from 'react'
-import CheckoutSteps from '../cmponents/CheckoutSteps'
+import CheckoutSteps from '../components/CheckoutSteps'
 import { Helmet } from 'react-helmet-async'
 import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { Store } from '../Store'
 import { toast } from 'react-toastify'
 import { getError } from '../utils'
 import axios from 'axios'
-import LoadingBox from '../cmponents/LoadingBox'
+import LoadingBox from '../components/LoadingBox'
 
 const style = {
     backgroundColor: '#ffc000',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Form, FormControl, InputGroup, Placeholder } from 'react-bootstrap';
 import {  useNavigate } from 'react-router-dom'
+import { Button, Form, FormControl, InputGroup } from 'react-bootstrap'
 
 const style = {
     backgroundColor: '#ffc000',
@@ -19,11 +19,11 @@ export default function SearchBox() {
             <InputGroup>
                 <FormControl type='text' name='q' id='q'
                     onChange={(e) => setQuery(e.target.value)}
-                    Placeholder="search products..."
+                    placeholder="search products..."
                     aria-label='Search Products'
                     aria-describedby='button-search'
                 ></FormControl>
-                <Button variant='primary' style={style} type='submit' id='button-search'>
+                <Button variant='primary' style={style  } type='submit' id='button-search'>
                     <i className='fas fa-search'></i>
                 </Button>
             </InputGroup>
