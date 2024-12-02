@@ -165,7 +165,7 @@ function App() {
             {/* Admin Routes */}
             <Route path="/dashboard" element={
               <AdminRoute>
-                <DashboardScree />
+                <DashboardScree />  
               </AdminRoute>} />
             <Route path="/search" element={<SearchScreen />} />
           </Routes>
