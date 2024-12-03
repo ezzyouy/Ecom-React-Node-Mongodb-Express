@@ -1,6 +1,7 @@
 import express, { query } from "express";
 import Product from "../models/productModel.js";
 import expressAsyncHandler from "express-async-handler";
+import { isAdmin, isAuth } from "../utils.js";
 
 const productRouter = express.Router();
 
@@ -9,9 +10,47 @@ productRouter.get("/", async (req, res) => {
     res.send(product);
 
 })
+productRouter.post("/", isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+    const newProduct = new Product({
+        name: 'name ' + Date.now(),
+        slug: 'slug ' + Date.now(),
+        image: "/images/p1.jpg",
+        brand: "brand" ,
+        category: "product category",
+        description: "new product" ,
+        price: 0,
+        countInStock: 0,
+        rating: 0,
+        numReviews:0,
+
+    })
+    const product= await newProduct.save();
+    res.send({message:'Product Created', product})
+}));
+
 const PAGE_SIZE = 3;
+
+productRouter.get("/admin", isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+    const query = req.query;
+
+    const page = query.page || 1;
+    const pageSize = query.pageSize || PAGE_SIZE;
+
+    const products = await Product.find()
+        .skip(pageSize * (page - 1))
+        .limit(pageSize)
+    const countProducts = await Product.countDocuments();
+
+    res.send({
+        products,
+        countProducts,
+        page,
+        pages: Math.ceil(countProducts / pageSize)
+    });
+}));
+
 productRouter.get("/search", expressAsyncHandler(async (req, res) => {
-    const {query}=req;
+    const { query } = req;
     const pageSize = query.pageSize || PAGE_SIZE;
     const page = query.page || 1;
     const category = query.category || '';
@@ -107,5 +146,6 @@ productRouter.get("/:id", async (req, res) => {
         res.status(400).send({ message: 'Product Not Found. ' })
     }
 })
+
 
 export default productRouter;
