@@ -26,6 +26,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { LinkContainer } from "react-router-bootstrap";
 import DashboardScree from "./screens/DashboardScree";
 import AdminRoute from "./components/AdminRoute";
+import ProductListScreen from "./screens/ProductListScreen";
 
 
 function App() {
@@ -106,10 +107,10 @@ function App() {
                 {(userInfo && userInfo.length !== 0) && userInfo.isAdmin && (
                   <NavDropdown title='Admin' id="admin-nav-dropdown">
 
-                    <NavDropdown.Item href={'/dashboard'}>Dashboard</NavDropdown.Item>
-                    <NavDropdown.Item href={'/productList'}>Products</NavDropdown.Item>
-                    <NavDropdown.Item href={'/orderList'}>Orders</NavDropdown.Item>
-                    <NavDropdown.Item href={'/userList'}>Users</NavDropdown.Item>
+                    <NavDropdown.Item href={'/admin/dashboard'}>Dashboard</NavDropdown.Item>
+                    <NavDropdown.Item href={'/admin/products'}>Products</NavDropdown.Item>
+                    <NavDropdown.Item href={'/admin/orders'}>Orders</NavDropdown.Item>
+                    <NavDropdown.Item href={'/admin/users'}>Users</NavDropdown.Item>
                   </NavDropdown>
                 )}
               </Nav>
@@ -163,9 +164,13 @@ function App() {
                 <ProfileScreen />
               </ProtectedRoute>} />
             {/* Admin Routes */}
-            <Route path="/dashboard" element={
+            <Route path="/admin/dashboard" element={
               <AdminRoute>
                 <DashboardScree />  
+              </AdminRoute>} />
+              <Route path="/admin/products" element={
+              <AdminRoute>
+                <ProductListScreen />  
               </AdminRoute>} />
             <Route path="/search" element={<SearchScreen />} />
           </Routes>

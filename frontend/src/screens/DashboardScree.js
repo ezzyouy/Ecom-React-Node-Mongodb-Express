@@ -84,7 +84,6 @@ function DashboardScree() {
                     </Row>
                     <div className='my-3'>
                         <h2>Sales</h2>
-                        {console.log(summary.dailyOrders)}
                         {summary.dailyOrders.length === 0 ? (
                             <MessageBox>No Sale</MessageBox>
                         ) : (
@@ -94,6 +93,22 @@ function DashboardScree() {
                                 chartType="AreaChart"
                                 loader={<div>loading Chart....</div>}
                                 data={[['Date', 'Sales'], ...summary.dailyOrders.map((x) => [x._id, x.sales])]}
+                            >
+
+                            </Chart>
+                        )}
+                    </div>
+                    <div className='my-3'>
+                        <h2>Categories</h2>
+                        {summary.productCategories.length === 0 ? (
+                            <MessageBox>No Category</MessageBox>
+                        ) : (
+                            <Chart
+                                width="100%"
+                                height="400px"
+                                chartType="PieChart"
+                                loader={<div>loading Chart....</div>}
+                                data={[['Category', 'Products'], ...summary.productCategories.map((x) => [x._id, x.count])]}
                             >
 
                             </Chart>
