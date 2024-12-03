@@ -27,6 +27,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import DashboardScree from "./screens/DashboardScree";
 import AdminRoute from "./components/AdminRoute";
 import ProductListScreen from "./screens/ProductListScreen";
+import ProductEditScreen from "./screens/ProductEditScreen";
 
 
 function App() {
@@ -171,6 +172,10 @@ function App() {
               <Route path="/admin/products" element={
               <AdminRoute>
                 <ProductListScreen />  
+              </AdminRoute>} />
+              <Route path="/admin/product/:id" element={
+              <AdminRoute>
+                <ProductEditScreen />  
               </AdminRoute>} />
             <Route path="/search" element={<SearchScreen />} />
           </Routes>

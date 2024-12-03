@@ -9,9 +9,9 @@ import MessageBox from '../components/MessageBox';
 import { Button, Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-const style={
-    backgroundColor:"#ffc000",
-    color:"#000000"
+const style = {
+    backgroundColor: "#ffc000",
+    color: "#000000"
 }
 const reducer = (state, action) => {
     switch (action.type) {
@@ -28,18 +28,18 @@ const reducer = (state, action) => {
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
         case 'CREATE_REQUEST':
-            return { ...state,loadingCreate: true }
+            return { ...state, loadingCreate: true }
         case 'CREATE_SUCCESS':
-            return { ...state, loadingCreate: false}
+            return { ...state, loadingCreate: false }
         case 'CREATE_FAIL¯':
-            return { ...state,loadingCreate: false }
+            return { ...state, loadingCreate: false }
         default:
             return state;
     }
 }
 function ProductListScreen() {
 
-    const navigate= useNavigate();
+    const navigate = useNavigate();
 
     const { search, pathname } = useLocation();
     const sp = new URLSearchParams(search);
@@ -75,7 +75,7 @@ function ProductListScreen() {
         if (window.confirm("Are you sure to create?")) {
             try {
                 dispatch({ type: "CREATE_REQUEST" });
-                const { data } = await axios.post(`/api/products`,{}, {
+                const { data } = await axios.post(`/api/products`, {}, {
                     headers: {
                         Authorization: `bearer ${userInfo.token}`
                     }
@@ -121,7 +121,7 @@ function ProductListScreen() {
                                 <th>PRICE</th>
                                 <th>CATEGORY</th>
                                 <th>BRAND</th>
-                                {/* <th>ACTIONS</th> */}
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,6 +132,15 @@ function ProductListScreen() {
                                     <td>{product.price}</td>
                                     <td>{product.category}</td>
                                     <td>{product.brand}</td>
+                                    <td>
+                                        <Button
+                                        type='button'
+                                        variant='light'
+                                        onClick={()=>navigate(`/admin/product/${product._id}`)}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
