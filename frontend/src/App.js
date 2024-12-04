@@ -28,6 +28,7 @@ import DashboardScree from "./screens/DashboardScree";
 import AdminRoute from "./components/AdminRoute";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
+import OrderListScreen from "./screens/OrderListScreen";
 
 
 function App() {
@@ -176,6 +177,10 @@ function App() {
               <Route path="/admin/product/:id" element={
               <AdminRoute>
                 <ProductEditScreen />  
+              </AdminRoute>} />
+              <Route path="/admin/orders" element={
+              <AdminRoute>
+                <OrderListScreen />  
               </AdminRoute>} />
             <Route path="/search" element={<SearchScreen />} />
           </Routes>

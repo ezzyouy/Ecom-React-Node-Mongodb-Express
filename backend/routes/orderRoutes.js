@@ -7,6 +7,16 @@ import Product from "../models/productModel.js";
 
 const orderRouter = express.Router();
 
+orderRouter.get("/", isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find().populate('user', 'name');
+    if(orders){
+        res.send(orders)
+    }else{
+        res.status(404).send({message:"Orders Doesn't existe"})
+    }
+
+}));
+
 orderRouter.post("/", isAuth, expressAsyncHandler(async (req, res) => {
     const newOrder = new Order({
         orderItems: req.body.orderItems.map((x) => ({ ...x, product: x._id })),
@@ -58,7 +68,7 @@ orderRouter.get("/summary", isAuth, isAdmin, expressAsyncHandler(async (req, res
             }
         },
     ])
-    
+
 
     res.send({ orders, users, dailyOrders, productCategories })
 }));
