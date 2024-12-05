@@ -137,8 +137,8 @@ function UserEditScreen() {
                         className='mb-3'
                         id='isAdmin'
                         type='checkbox'
-                        value={isAdmin}
-                        onChange={(e) => setIsAdmin(e.target.value)}
+                        checked={isAdmin}
+                        onChange={(e) => setIsAdmin(!isAdmin)}
                     />
                     <div>
                         <Button
