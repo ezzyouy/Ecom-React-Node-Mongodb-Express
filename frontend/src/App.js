@@ -23,7 +23,6 @@ import axios from "axios";
 import SearchBox from "./components/SearchBox";
 import SearchScreen from "./screens/SearchScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { LinkContainer } from "react-router-bootstrap";
 import DashboardScree from "./screens/DashboardScree";
 import AdminRoute from "./components/AdminRoute";
 import ProductListScreen from "./screens/ProductListScreen";
@@ -31,11 +30,13 @@ import ProductEditScreen from "./screens/ProductEditScreen";
 import OrderListScreen from "./screens/OrderListScreen";
 import UserListScreen from "./screens/UserListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
+import MapScreen from "./screens/MapScreen";
 
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store)
-  const { cart, userInfo } = state
+
+  const { fullBox, cart, userInfo } = state
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
     localStorage.removeItem('userInfo');
@@ -63,8 +64,12 @@ function App() {
 
     <div className={
       sidebaeIsOpen
-        ? `d-flex flex-column site-container active-cont`
-        : "d-flex flex-column site-container"
+        ? fullBox
+          ? `d-flex flex-column site-container active-cont full_box`
+          : "d-flex flex-column site-container active-cont"
+        : fullBox
+          ? `d-flex flex-column site-container active-cont`
+          : "d-flex flex-column site-container"
     }>
       <ToastContainer position="bottom-center" limit={1} />
       <header>
@@ -167,30 +172,34 @@ function App() {
               <ProtectedRoute>
                 <ProfileScreen />
               </ProtectedRoute>} />
+              <Route path="/map" element={
+              <ProtectedRoute>
+                <MapScreen />
+              </ProtectedRoute>} />
             {/* Admin Routes */}
             <Route path="/admin/dashboard" element={
               <AdminRoute>
-                <DashboardScree />  
+                <DashboardScree />
               </AdminRoute>} />
-              <Route path="/admin/products" element={
+            <Route path="/admin/products" element={
               <AdminRoute>
-                <ProductListScreen />  
+                <ProductListScreen />
               </AdminRoute>} />
-              <Route path="/admin/product/:id" element={
+            <Route path="/admin/product/:id" element={
               <AdminRoute>
-                <ProductEditScreen />  
+                <ProductEditScreen />
               </AdminRoute>} />
-              <Route path="/admin/orders" element={
+            <Route path="/admin/orders" element={
               <AdminRoute>
-                <OrderListScreen />  
+                <OrderListScreen />
               </AdminRoute>} />
-              <Route path="/admin/users" element={
+            <Route path="/admin/users" element={
               <AdminRoute>
-                <UserListScreen />  
+                <UserListScreen />
               </AdminRoute>} />
-              <Route path="/admin/user/:id" element={
+            <Route path="/admin/user/:id" element={
               <AdminRoute>
-                <UserEditScreen />  
+                <UserEditScreen />
               </AdminRoute>} />
             <Route path="/search" element={<SearchScreen />} />
           </Routes>
