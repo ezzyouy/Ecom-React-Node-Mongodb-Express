@@ -15,6 +15,15 @@ userRouter.get('/', isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
     }
 }));
 
+userRouter.get('/:id', isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (user) {
+        res.send(user);
+    } else {
+        res.status(404).send({ message: 'User Not Found' });
+    }
+}));
+
 userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
 
 
@@ -53,7 +62,22 @@ userRouter.post('/signup', expressAsyncHandler(async (req, res) => {
         isAdmin: user.isAdmin,
         token: generateToken(user)
     })
-}))
+}));
+
+userRouter.put('/:id', isAuth, expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = Boolean(req.body.isAdmin);
+
+        const updateUser = await user.save();
+        res.send({ message: "User Updated", user: updateUser });
+    } else {
+        res.status(404).send({ message: 'User Not Found' });
+    }
+}));
+
 userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
 
 
@@ -76,5 +100,6 @@ userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
         res.status(404).send({ message: 'User Not Found' })
     }
 }))
+
 
 export default userRouter;
