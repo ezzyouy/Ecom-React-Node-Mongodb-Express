@@ -2,12 +2,21 @@ import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import bcrypt from 'bcryptjs';
-import { generateToken, isAuth } from '../utils.js';
+import { generateToken, isAdmin, isAuth } from '../utils.js';
 
 const userRouter = express.Router()
 
+userRouter.get('/', isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+    const users = await User.find();
+    if (users) {
+        res.send(users);
+    } else {
+        res.status(404).send({ message: 'Users Not Found' });
+    }
+}));
+
 userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
-   
+
 
     const user = await User.findOne({ email: req.body.email });
     if (user == null) console.log("null user");
@@ -16,7 +25,7 @@ userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
     if (user) {
 
         if (bcrypt.compareSync(req.body.password, user.password)) {
-            
+
             res.send({
                 _id: user._id,
                 name: user.name,
@@ -45,26 +54,26 @@ userRouter.post('/signup', expressAsyncHandler(async (req, res) => {
         token: generateToken(user)
     })
 }))
-userRouter.put('/profile',isAuth, expressAsyncHandler(async (req, res) => {
-    
-    
-    const user= await User.findById(req.user._id)
-    if(user){
+userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
+
+
+    const user = await User.findById(req.user._id)
+    if (user) {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
-        if(req.body.password){
+        if (req.body.password) {
             user.password = bcrypt.hashSync(req.body.password, 8);
         }
-        const updateUser= await user.save();
+        const updateUser = await user.save();
         res.send({
-            _id:updateUser._id,
-            name:updateUser.name,
-            email:updateUser.email,
-            isAdmin:updateUser.isAdmin,
+            _id: updateUser._id,
+            name: updateUser.name,
+            email: updateUser.email,
+            isAdmin: updateUser.isAdmin,
             token: generateToken(updateUser)
         })
-    }else{
-        res.status(404).send({message:'User Not Found'})
+    } else {
+        res.status(404).send({ message: 'User Not Found' })
     }
 }))
 
