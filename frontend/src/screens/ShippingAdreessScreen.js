@@ -8,7 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps'
 export default function ShippingAdreessScreen() {
     const navigate = useNavigate();
     const { state, dispatch: ctxDispatch } = useContext(Store);
-    const { userInfo, cart: { shippingAddress } } = state;
+    const { fullBox, userInfo, cart: { shippingAddress } } = state;
     const [fullName, setFullName] = useState(shippingAddress.fullName || '')
     const [address, SetAddress] = useState(shippingAddress.address || '')
     const [city, setCity] = useState(shippingAddress.city || '')
@@ -23,7 +23,8 @@ export default function ShippingAdreessScreen() {
                 address,
                 city,
                 postalCode,
-                country
+                country,
+                location: shippingAddress.location
             },
         });
         localStorage.setItem(
@@ -33,15 +34,20 @@ export default function ShippingAdreessScreen() {
                 address,
                 city,
                 postalCode,
-                country
+                country,
+                location: shippingAddress.location
             }));
         navigate('/payment');
     };
     useEffect(() => {
         if (!userInfo) {
             navigate('/signin?redirect=/shipping')
-        } 
+        }
     }, [userInfo, navigate])
+
+    useEffect(() => {
+        ctxDispatch({ type: 'SET_FULLBOX_OFF' })
+    }, [ctxDispatch, fullBox])
 
     return (
         <div>
@@ -92,7 +98,24 @@ export default function ShippingAdreessScreen() {
                             required
                         ></Form.Control>
                     </Form.Group>
-
+                    <div className='mb-3 '>
+                        <Button
+                            id='chooseOnMap'
+                            type='button'
+                            variant='light'
+                            onClick={() => navigate('/map')}
+                        >
+                            Choose Location on Map
+                        </Button>
+                        {shippingAddress.location && shippingAddress.location.lat ? (
+                            <div>
+                                LAT: {shippingAddress.location.lat}
+                                LNG: {shippingAddress.location.lng}
+                            </div>
+                        ) : (
+                            <div>No location</div>
+                        )}
+                    </div>
                     <div className='mb-3 mt-2 '>
                         <Button variant='warning' type='submit'>
                             Continue
