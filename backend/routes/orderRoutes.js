@@ -4,6 +4,7 @@ import Order from "../models/orderModel.js";
 import { isAdmin, isAuth } from "../utils.js";
 import User from "../models/userModel.js";
 import Product from "../models/productModel.js";
+import nodemailer from "nodemailer";
 
 const orderRouter = express.Router();
 
@@ -100,6 +101,47 @@ orderRouter.put('/:id/pay', isAuth, expressAsyncHandler(async (req, res) => {
             email_address: req.body.email_address
         };
         const updateOrder = await order.save();
+        /* mailgun().message().send({
+            form:'Amazona <Ama@mg.yourdomain.com>',
+            to:`${order.user.name} <${order.user.email}>`,
+            subject: `New order ${order._id}`,
+            html: payOrderEmailTemplate(order),
+        },
+            (error,body)=>{
+                if(error){
+                    console.log(error);
+                }else{
+                    console.log(body);
+                    
+                }
+            }
+        ); */
+        const transporter = nodemailer.createTransport({
+            host: 'sandbox.smtp.mailtrap.io',
+            port: 587,
+            secure: false, // use SSL
+            auth: {
+              user: 'bee5e843bea378',
+              pass: 'c80f751071f8c1',
+            }
+          });
+          
+          // Configure the mailoptions object
+          const mailOptions = {
+            from: 'bra-e-zz@hotmail.fr',
+            to: 'brahim.ezzyouy@email.com',
+            subject: 'Sending Email using Node.js',
+            text: 'That was easy!'
+          };
+          
+          // Send the email
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log('Error:', error);
+            } else {
+              console.log('Email sent:', info.response);
+            }
+          });
         res.send({ message: 'Order Paid', order: updateOrder })
     } else {
         res.status(404).send({ message: 'Order Not Found' });

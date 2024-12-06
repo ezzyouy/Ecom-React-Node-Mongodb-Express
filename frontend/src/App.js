@@ -32,7 +32,6 @@ import UserListScreen from "./screens/UserListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import MapScreen from "./screens/MapScreen";
 
-
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store)
 
@@ -65,14 +64,14 @@ function App() {
     <div className={
       sidebaeIsOpen
         ? fullBox
-          ? `d-flex flex-column site-container active-cont full_box`
+          ? `d-flex flex-column site-container active-cont full-box`
           : "d-flex flex-column site-container active-cont"
         : fullBox
           ? `d-flex flex-column site-container active-cont`
           : "d-flex flex-column site-container"
     }>
       <ToastContainer position="bottom-center" limit={1} />
-      <header>
+      <header style={fullBox ? { display: 'none' } : null}>
         <Navbar bg="dark" variant="dark" expand="lg">
           <Container>
             <Button
@@ -172,7 +171,7 @@ function App() {
               <ProtectedRoute>
                 <ProfileScreen />
               </ProtectedRoute>} />
-              <Route path="/map" element={
+            <Route path="/map" element={
               <ProtectedRoute>
                 <MapScreen />
               </ProtectedRoute>} />
@@ -206,7 +205,7 @@ function App() {
 
         </Container>
       </main>
-      <footer>
+      <footer style={fullBox ? { display: 'none' } : null}>
         <div className="text-center ">All rights reserved</div>
       </footer>
     </div>
