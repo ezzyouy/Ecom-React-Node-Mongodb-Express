@@ -92,8 +92,7 @@ function MapScreen() {
         navigate('/shipping');
     }
     return (
-        <div className='full-box' style={{
-            height: " 100vh",
+        <div className='full-box' style={{ 
            maxWidth:" initial"
           }}>
             <LoadScript libraries={libs} googleMapsApiKey={googleApikey}>

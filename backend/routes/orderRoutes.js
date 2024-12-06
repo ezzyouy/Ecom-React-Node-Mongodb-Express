@@ -128,8 +128,8 @@ orderRouter.put('/:id/pay', isAuth, expressAsyncHandler(async (req, res) => {
           
           // Configure the mailoptions object
           const mailOptions = {
-            from: 'bra-e-zz@hotmail.fr',
-            to: 'brahim.ezzyouy@email.com',
+            from: 'b0e74bdb47-97e865+1@inbox.mailtrap.io  ',
+            to: 'brahim.ezzyouy@gmail.com',
             subject: 'Sending Email using Node.js',
             text: 'That was easy!'
           };
