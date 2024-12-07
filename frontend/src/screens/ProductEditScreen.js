@@ -3,7 +3,7 @@ import { Store } from '../Store'
 import { getError } from '../utils'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Container, Form } from 'react-bootstrap'
+import { Button, Container, Form, ListGroup } from 'react-bootstrap'
 import { Helmet } from 'react-helmet-async'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
@@ -55,11 +55,13 @@ function ProductEditScreen() {
     const [slug, setSlug] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
+    const [images, setImages] = useState([]);
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [brand, setBrand] = useState('');
     const [description, setDescription] = useState('');
-
+    console.log("images--->", images);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -70,6 +72,7 @@ function ProductEditScreen() {
                 setPrice(data.price);
                 setCategory(data.category);
                 setImage(data.image);
+                setImages(data.images);
                 setCountInStock(data.countInStock);
                 setBrand(data.brand);
                 setDescription(data.description);
@@ -93,6 +96,7 @@ function ProductEditScreen() {
                 slug,
                 price,
                 image,
+                images,
                 category,
                 brand,
                 description,
@@ -110,29 +114,37 @@ function ProductEditScreen() {
             dispatch({ type: 'UPDATE_FAIL' })
         }
     }
-    const uploadFileHandler = async(e) => {
-        
-        const file= e.target.files[0];
-        const bodyFormDate= new FormData();
+    const uploadFileHandler = async (e, forImages) => {
+
+        const file = e.target.files[0];
+        const bodyFormDate = new FormData();
         bodyFormDate.append('file', file);
         try {
             dispatch({ type: 'UPLOAD_REQUEST' })
-            const {data}= await axios.post(`/api/upload`, bodyFormDate,{
+            const { data } = await axios.post(`/api/upload`, bodyFormDate, {
                 headers: {
-                    'Content-Type':'multipart/form-data',
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `bearer ${userInfo.token}`
                 }
             })
             dispatch({ type: 'UPLOAD_SUCCESS' });
-            toast.success('Image uploaded successfully');
-            setImage(data.secure_url);
+            if (forImages) {
+                setImages([...images, data.secure_url]);
+            } else {
+                setImage(data.secure_url);
+            }
+            toast.success("Image uploaded successfully, click update to apply it");
         } catch (error) {
             toast.error(getError(error));
             dispatch({ type: 'UPLOAD_FAIL', payload: getError(error) });
         }
     }
+    const deleteFileHandler = async (fileName) => {
+        setImages(images.filter((x) => x === fileName));
+        toast.success('Images removed successfully. click update to apply it')
+    }
     return (
-        <Container className={smallContainer}>
+        <Container className=  {smallContainer}>
             <Helmet>
                 <title>
                     Edit Product ${productId}
@@ -182,6 +194,30 @@ function ProductEditScreen() {
                         <Form.Control
                             type='file'
                             onChange={uploadFileHandler}
+
+                        />
+                        {loadingUpload && <LoadingBox></LoadingBox>}
+                    </Form.Group>
+                    <Form.Group className='mb-3' controlId='additionalImage'>
+                        <Form.Label>Additional Images</Form.Label>
+                        {images.length === 0 && <MessageBox>No image</MessageBox>}
+                        <ListGroup variant='flush'>
+                            {console.log(images.length)}
+                            {images.map((x) => (
+                                <ListGroup.Item key={x}>
+                                    {x}
+                                    <Button variant='light' onClick={(x) => deleteFileHandler(x)}>
+                                        <i className='fa fa-times-circle'></i>
+                                    </Button>
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+                    </Form.Group>
+                    <Form.Group className='mb-3' controlId='additionalImageFile'>
+                        <Form.Label>Upload Additional File</Form.Label>
+                        <Form.Control
+                            type='file'
+                            onChange={(e) => uploadFileHandler(e, true)}
 
                         />
                         {loadingUpload && <LoadingBox></LoadingBox>}

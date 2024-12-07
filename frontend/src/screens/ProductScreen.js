@@ -10,6 +10,16 @@ import { getError } from '../utils'
 import { Store } from '../Store'
 import { toast } from 'react-toastify'
 
+const style = {
+    normale: {
+        backgroundColor: "#ffc000",
+        color: "#000000"
+    },
+    hover: {
+        backgroundColor: "#007bff",
+        color: "#ffffff"
+    }
+}
 const reducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_REQUEST':
@@ -34,6 +44,8 @@ function ProductScreen() {
 
     const [rating, setRating] = useState(0)
     const [comment, setComment] = useState('')
+    const [hover, setHover] = useState(false)
+    const [selectedImages, setSelectedImages] = useState([])
 
     let reviewsRef = useRef()
 
@@ -51,6 +63,7 @@ function ProductScreen() {
             dispatch({ type: 'FETCH_REQUEST' })
             try {
                 const result = await axios.get(`/api/products/slug/${slug}`)
+                setSelectedImages(result.data?.image);
                 dispatch({ type: 'FETCH_SUCCESS', payload: result.data })
             } catch (error) {
                 dispatch({ type: 'FETCH_FAIL', payload: getError(error) })
@@ -118,9 +131,10 @@ function ProductScreen() {
                 <div>
                     <Row>
                         <Col md={6}>
+                        {console.log(product)}
                             <img
                                 className='img-large'
-                                src={product?.image}
+                                src={selectedImages /* || product?.image */}
                                 alt={product?.slig}
                             />
                         </Col>
@@ -139,6 +153,27 @@ function ProductScreen() {
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     Price : ${product?.price}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <Row xs={1} md={2} className='g-2'>
+                                        {
+                                            [product?.image, ...product.images].map((x) => (
+                                                <Col key={x}>
+                                                    <Card>
+                                                        <Button
+                                                            className='thumbnail'
+                                                            type='button'
+                                                            variant='light'
+                                                            onClick={() => setSelectedImages(x)}
+                                                        >
+                                                            <Card.Img
+                                                                variant='top' src={x} alt='product' />
+                                                        </Button>
+                                                    </Card>
+                                                </Col>
+                                            ))
+                                        }
+                                    </Row>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     Description:
@@ -170,7 +205,12 @@ function ProductScreen() {
                                         {product.countInStock > 0 && (
                                             <ListGroup.Item>
                                                 <div className='d-grid'>
-                                                    <Button onClick={addToCartHandler} variant='warning'>
+                                                    <Button
+                                                        onMouseEnter={() => setHover(true)}
+                                                        onMouseLeave={() => setHover(false)}
+                                                        style={{ ...style.normale, ...(hover ? style.hover : null) }}
+                                                        onClick={addToCartHandler}
+                                                        variant='warning'>
                                                         Add to Cart
                                                     </Button>
                                                 </div>
@@ -231,7 +271,12 @@ function ProductScreen() {
                             />
                         </FloatingLabel>
                         <div className='mb-3'>
-                            <Button disabled={loadingCreateReview} type='submit'>
+                            <Button
+                                onMouseEnter={() => setHover(true)}
+                                onMouseLeave={() => setHover(false)}
+                                style={{ ...style.normale, ...(hover ? style.hover : null) }}
+                                disabled={loadingCreateReview}
+                                type='submit'>
                                 Submit
                             </Button>
                             {loadingCreateReview && <LoadingBox></LoadingBox>}

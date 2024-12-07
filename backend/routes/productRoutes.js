@@ -31,10 +31,11 @@ productRouter.post("/", isAuth, isAdmin, expressAsyncHandler(async (req, res) =>
 productRouter.put("/:id", isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
-    if (product) {
+    if (product) {        
         product.name = req.body.name;
         product.slug = req.body.slug;
         product.image = req.body.image;
+        product.images = req.body.images;
         product.price = req.body.price;
         product.category = req.body.category;
         product.brand = req.body.brand;
